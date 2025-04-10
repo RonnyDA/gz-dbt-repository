@@ -8,9 +8,32 @@ sources:
       - name: sales
         identifier: raw_gz_sales
         description: raw sportswear sales
+        columns:
+          - name:  date_date
+            description: date of order
+          - name: orders_id
+            description: id of the order
+            tests:
+              - unique:
+                  column_name:"(date_date || "-"||orders_id)" 
       - name: product
         identifier: raw_gz_product
         description: lists of products
+        columns:
+          - name: products_id
+            tests:
+            - unique
+            - not_null
       - name: ship
         identifier: raw_gz_ship
         description:  shipment table
+        columns:
+          - name: orders_id
+            description: PK of the table
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: fees to subtract for operational margin
+          - name: logcost
+            description: cost to substract for operational margin

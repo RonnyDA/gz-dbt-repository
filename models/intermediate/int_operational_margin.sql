@@ -1,5 +1,6 @@
 SELECT 
 orders_id
+,quantity
 ,date_date
 ,revenue
 ,purchase_cost

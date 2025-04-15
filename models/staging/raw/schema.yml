@@ -3,34 +3,34 @@ version: 2
 sources:
   - name: raw
     schema: gz_raw_data
-    description:  greenweez raw data
+    description: greenweez raw data
     tables:
       - name: sales
         identifier: raw_gz_sales
         description: raw sportswear sales
-        loaded_at_field:  "CAST(date_date AS TIMESTAMP)"
-        freshness: 
-          warn_after: {count: 90, period: day}
+        loaded_at_field: "CAST(date_date AS TIMESTAMP)"
+        freshness:
+          warn_after: { count: 90, period: day }
         columns:
-          - name:  date_date
+          - name: date_date
             description: date of order
           - name: orders_id
             description: id of the order
         tests:
           - unique:
               column_name: "(orders_id || '-' || pdt_id)"
-        
+
       - name: product
         identifier: raw_gz_product
         description: lists of products
         columns:
           - name: products_id
             tests:
-            - unique
-            - not_null
+              - unique
+              - not_null
       - name: ship
         identifier: raw_gz_ship
-        description:  shipment table
+        description: shipment table
         columns:
           - name: orders_id
             description: PK of the table
@@ -41,26 +41,65 @@ sources:
             description: fees to subtract for operational margin
           - name: logcost
             description: cost to substract for operational margin
+      - name: adwords
+        identifier: raw_gz_adwords
+        description: ads table from adwords
+        columns:
+          - name: date_date
+            description: date of ads
+            tests:
+              - not_null
+    
+      - name: bing
+        identifier: raw_gz_bing
+        description:  ads table from bing
+        columns:
+          - name: date_date
+            description: date of ads
+            tests:
+              - not_null
+        
+      - name: facebook
+        identifier: raw_gz_facebook
+        description:  ads table from facebook
+        columns:
+          - name: date_date
+            description: date of ads
+            tests:
+              - not_null
+
+      - name: criteo
+        identifier: raw_gz_criteo
+        description: ads table from criteo
+        columns:
+          - name: date_date
+            description: date of ads
+            tests:
+              - not_null
+        
+        
 models:
-   - name: int_orders_margin
-     description: orders margin based on sales_margin
-     columns:
-       - name: orders_id
-         description: your column description here
-         tests:
-           - unique
-           - not_null
-       - name: revenue
-         description: your column description here
-         tests:
+  - name: int_orders_margin
+    description: orders margin based on sales_margin
+    columns:
+      - name: orders_id
+        description: your column description here
+        tests:
+          - unique
           - not_null
-       - name: margin
-         description: your column description here
-         tests:
+      - name: revenue
+        description: your column description here
+        tests:
           - not_null
-   - name: int_sales_margin
-     description: raw_sales joined  with raw_product
-   - name: int_operational_margin
-     description: int_orders joined with raw_ship_results_operational_margin
-   - name: finance_days
-     description: financial mart model from int_orders_margin  
+      - name: margin
+        description: your column description here
+        tests:
+          - not_null
+  - name: int_sales_margin
+    description: raw_sales joined  with raw_product
+  - name: int_operational_margin
+    description: int_orders joined with raw_ship_results_operational_margin
+  - name: finance_days
+    description: financial mart model from int_orders_margin
+  - name: int_campaigns.sql
+    description: union of 4 ads tables

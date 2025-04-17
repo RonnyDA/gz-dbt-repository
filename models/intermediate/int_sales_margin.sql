@@ -1,8 +1,24 @@
-SELECT 
-*
-,quantity*purchase_price AS purchase_cost
-,ROUND(revenue-(quantity*purchase_price),2) AS margin
+with
+    joining as (
 
-FROM {{ ref('stg_raw__sales') }}
-LEFT JOIN {{ ref('stg_raw__product') }}
-USING (products_id)
+        select
+            *,
+            quantity * purchase_price as purchase_cost,
+            round(revenue - (quantity * purchase_price), 2) as margin,
+
+        from {{ ref("stg_raw__sales") }}
+        left join {{ ref("stg_raw__product") }} using (products_id)
+    )
+
+select 
+{{ margin_percent("margin", "revenue") }},
+{{ revenue_prod ( 'revenue', 'quantity' ) }} AS diff_rev ,
+{{ key ('products_id', 'orders_id') }},
+ *
+from joining
+
+
+
+
+
+

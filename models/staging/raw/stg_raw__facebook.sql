@@ -6,7 +6,7 @@ with
 
         select
             date_date,
-            paid_source,
+            paid_source as pd_sc,
             campaign_key,
             campgn_name as campaign_name,
             cast(ads_cost as float64) as ads_cost,
